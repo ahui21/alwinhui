@@ -1,10 +1,22 @@
 body {
 	background: #3E4548;
 	color: #A3A3A3;
-	font-family: proxima-nova;
+	font-family: "Montserrat";
+	text-shadow: 0.5px 0.5px 0.5px #aaa;
 }
 h1 {
 	color: #FFFFFF;
+	font-size: 22px;
+    font-weight: 600;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    line-height: 1em;
+	text-shadow: 4px 4px 4px #aaa;
+}
+img {
+	max-width: 100%;
+	max-height: 100%;
 }
 #left {
 	position: absolute;
@@ -15,6 +27,6 @@ h1 {
 #right {
 	position: absolute;
 	right: 0;
-	top: 0;
+	top: 50%;
 	width: 50%;
 }
