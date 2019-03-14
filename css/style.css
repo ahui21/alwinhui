@@ -14,16 +14,10 @@ h1 {
     	line-height: 1em;
 	text-shadow: 4px 4px 4px #aaa;
 }
-<<<<<<< HEAD
 #left img {
 	margin-left: auto;
 	margin-right: auto;
 	display: block;
-=======
-img {
-	height: 100%;
-	width: 100%;
->>>>>>> 11cd92b37776080123aca0a3e748ceff6ebc898d
 }
 a {text-decoration: none;}
 a:link {color: #999; text-decoration: none;}
