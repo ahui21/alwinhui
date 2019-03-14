@@ -7,19 +7,21 @@ body {
 h1 {
 	color: #FFFFFF;
 	font-size: 22px;
-    	font-weight: 600;
-    	font-style: normal;
-    	text-transform: uppercase;
-    	letter-spacing: .14em;
-    	line-height: 1em;
+	font-weight: 600;
+	font-style: normal;
+	text-transform: uppercase;
+	letter-spacing: .14em;
+	line-height: 1em;
 	text-shadow: 4px 4px 4px #aaa;
 }
 #left img {
+	float: left;
+	width: 50%;
 	height: 100%;
-	width: 100%;
-	margin-left: auto;
-	margin-right: auto;
-	display: block;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	position: relative;
 }
 a {text-decoration: none;}
 a:link {color: #999; text-decoration: none;}
