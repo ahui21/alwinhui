@@ -1,0 +1,41 @@
+body {
+	background: #3E4548;
+	color: #A3A3A3;
+	font-family: "Montserrat";
+	text-shadow: 0.25px 0.25px 0.25px #aaa;
+}
+h1 {
+	color: #FFFFFF;
+	font-size: 22px;
+	font-weight: 600;
+	font-style: normal;
+	text-transform: uppercase;
+	letter-spacing: .14em;
+	line-height: 1em;
+	text-shadow: 4px 4px 4px #aaa;
+}
+#left img {
+	display: block;
+	height: 100vh;
+	margin: auto;
+}
+a {text-decoration: none;}
+a:link {color: #999; text-decoration: none;}
+a:visited {color: #999; text-decoration: none;}
+a:hover {color: #FFFFFF; text-decoration: none;}
+
+#left {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 50%;
+}
+#right {
+	position: absolute;
+	right: 0;
+	width: 50%;
+	top: 45%;
+}
+#logos{margin-top: 25px;}
+#logos a{margin: 0 10px;}
+#logos a i{font-size: 50px;}
