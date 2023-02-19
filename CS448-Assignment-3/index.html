@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    <title>Leaflet + Leaflet.Draw Example</title>
+</head>
+<style>
+    .controls {
+        display: flex;
+        flex-direction: column;
+    }
+    .control-section {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+</style>
+
+<body>
+    <div id="map" style="width: 50%; height: 500px;"></div>
+    <div class="controls">
+        <div class="control-section">
+            <div>Ratings (0 - 5)</div>
+            <div id="rating"></div>
+        </div>
+        <div class="control-section">
+            <div>Reviews (0 - 500)</div>
+            <div id="reviews"></div>
+        </div>
+        <div class="control-section">
+            <p>Price: </p>
+            <div class="radio-group">
+                <label><input type="radio" name="price" value="Any" multiple>Any</label>
+                <label><input type="radio" name="price" value="$"> $</label>
+                <label><input type="radio" name="price" value="$$"> $$</label>
+                <label><input type="radio" name="price" value="$$$"> $$$</label>
+                <label><input type="radio" name="price" value="$$$$"> $$$$</label>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+
+    <script>
+        /* Leaflet boilerplate */
+        let map = L.map("map").setView([37.4806329, -122.199059], 9);
+        L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png', {
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+        }).addTo(map);
+
+        /* circle state management */
+        let drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems); // allow the map to keep track of any circles added to the map
+
+        /* Leaflet controls for drawing and editing on the map */
+        let drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems,
+            },
+            draw: {
+                marker: false,
+                polyline: false,
+                circlemarker: false,
+                circle: {
+                    shapeOptions: {
+                        color: "red",
+                    },
+                },
+                rectangle: false,
+                polygon: false,
+            },
+        });
+        map.addControl(drawControl);
+
+        /* D3 Elements */
+        let ratingSlider = d3
+            .sliderBottom()
+            .min(0)
+            .max(5)
+            .step(0.1)
+            .width(300)
+            .tickFormat(d3.format(".1f"))
+            .default([0, 5])
+            .fill("#2196f3")
+            .on("onchange", val => filterMarkers());
+
+        d3.select("#rating")
+            .append("svg")
+            .attr("width", 350)
+            .attr("height", 100)
+            .append("g")
+            .attr("transform", "translate(10,30)")
+            .call(ratingSlider); 
+
+        let reviewSlider = d3
+            .sliderBottom()
+            .min(1)
+            .max(2000)
+            .step(10)
+            .width(300)
+            .tickFormat(d3.format("d"))
+            .default([1, 2000])
+            .fill("#2196f3")
+            .on("onchange", val => filterMarkers());
+
+        d3.select("#reviews")
+            .append("svg")
+            .attr("width", 350)
+            .attr("height", 100)
+            .append("g")
+            .attr("transform", "translate(10,30)")
+            .call(reviewSlider); 
+
+        let radioGroup = d3.select(".radio-group");
+        let selectedPriceValue = "Any";
+        let radioButtons = radioGroup.selectAll("input[type=radio]");
+        radioButtons.on("change", () => {
+            selectedPriceValue = radioGroup.select("input:checked").node().value;
+            filterMarkers();
+        });
+
+        /* Prepare for data to be converted to geoJSON, initialize 2 layers */
+        let geojson = {};
+        let geojsonLayerBase = L.geoJSON(null, { // this layer contains the original data, and will not be modified
+            pointToLayer: addMarkers,
+            onEachFeature: addLayers
+        })
+
+        let geojsonUpdateLayer = L.geoJSON(null, { // this layer will change based on the filters
+            pointToLayer: addMarkers,
+            onEachFeature: addLayers
+        })
+
+        /* read in data and convert to geoJSON to greatly speed up drawing performance */
+        d3.csv("data.csv").then(function (data) {
+            // Iterate over each row in the CSV data
+            const features = data.map(function (row) {
+                let coords = row.coordinates.split(",");
+                if (row.price === '0') {
+                    row.price = '$'
+                }
+                return {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [parseFloat(coords[0]), parseFloat(coords[1])],
+                    },
+                    properties: {
+                        name: row.name,
+                        price: row.price,
+                        rating: row.rating,
+                        review_count: row.review_count,
+                        categories: row.categories,
+                        phone: row.phone,
+                        address: row.address,
+                    }
+                };
+            });
+
+            // with the data imported, initialize the geojson object and layers
+            geojson = {
+                type: 'FeatureCollection',
+                features: features
+            };
+
+            geojsonLayerBase = L.geoJSON(geojson, {
+                pointToLayer: addMarkers,
+                onEachFeature: addLayers
+            })
+            geojsonUpdateLayer = L.geoJSON(geojson, {
+                pointToLayer: addMarkers,
+                onEachFeature: addLayers
+            });
+
+            geojsonUpdateLayer.addTo(map);
+
+            // console.log(geojson);
+            // console.log("geojsonlayerInitial: ", geojsonLayerBase)
+        });
+
+        /* Specify listener functions to handle when circles are added, edited, and removed */
+        map.on("draw:created", function(e) {
+            let layer = e.layer;
+            drawnItems.addLayer(layer); // this line is necessary; otherwise, the circle will not be added to the map
+            filterMarkers();
+        })
+
+        map.on("draw:edited draw:deleted", function(e) {
+            filterMarkers();
+        });
+
+
+        /* Business Logic for intersection code */
+        // Note - currently handles N circles, this is unnecessary and can be simplified to handling 2 circles
+        function filterMarkers() {
+            let filteredMarkers = [];
+            if (drawnItems.getLayers().length > 1) {
+                // takes all the data and stages it for filtering
+                geojsonLayerBase.eachLayer(marker => {
+                    filteredMarkers.push(marker);
+                })
+
+                // filters the staged data based on the circles drawn on the map
+                drawnItems.getLayers().forEach(circle => {
+                    let circleCenter = circle.getLatLng();
+                    let circleRadius = circle.getRadius();
+
+                    let intersection = [] // this array will contain the intersection of the previous circle and the current circle
+                    filteredMarkers.forEach(marker => {
+                        let markerCoords = marker.getLatLng();
+                        let distance = circleCenter.distanceTo(markerCoords);
+                        if (distance <= circleRadius) {
+                            intersection.push(marker);
+                        }
+                    })
+                    filteredMarkers = intersection; // update the filteredMarkers array to be the intersection of the previous circle and the current circle
+                })
+            }
+            else if(drawnItems.getLayers().length <= 1) {
+                // if no geolocation filtering should happen, take all the data and stage it for filtering
+                filteredMarkers = geojsonLayerBase.getLayers();
+            }
+
+            // clear the existing data and prepare to add the staged data
+            map.removeLayer(geojsonUpdateLayer);
+            geojsonUpdateLayer = L.geoJSON(null, {
+                pointToLayer: addMarkers,
+                onEachFeature: addLayers,
+                filter: filterLocation,
+            })
+            geojsonUpdateLayer.addData({
+                type: 'FeatureCollection',
+                features: filteredMarkers.map(layer => layer.feature) // hacky, grabs the geoJSON data from the staged data
+            });
+            geojsonUpdateLayer.addTo(map); // finally, add the staged data to the map
+        }
+
+        // Helper function that indicates to the geojsonLayer that we should show markers for each location
+        function addMarkers(feature, latlng) {
+            let marker = L.marker([latlng.lng, latlng.lat]);
+            return marker
+        }
+
+        // Helper function to bind a popup to each marker based on the feature information
+        function addLayers(feature, layer) {
+            // extract property info
+            let { name, price, rating, review_count, categories, phone, address } = feature.properties;
+
+            // Bind a popup to the geoJSON layer with the property info
+            layer.bindPopup(`Name: ${name} <br>Price: ${price} <br>Rating: ${rating} stars<br>Reviews: ${review_count} <br>Tags: ${categories} <br>Phone #: ${phone} <br>Address: ${address}}`);
+
+            // Show the popup on hover
+            layer.on('mouseover', function (e) {
+                this.openPopup();
+            });
+
+            // Hide the popup when the mouse leaves
+            layer.on("mouseout", function (e) {
+                this.closePopup();
+            });
+        }
+
+        // Helper function to filter the geoJSON layer based on the user's input
+        function filterLocation(feature) {
+            let { name, price, rating, review_count, categories, phone, address } = feature.properties;
+
+            let filterCondition = (
+                rating >= ratingSlider.value()[0] && rating <= ratingSlider.value()[1] &&
+                review_count >= reviewSlider.value()[0] && review_count <= reviewSlider.value()[1] &&
+                (selectedPriceValue === "Any" || price === selectedPriceValue) &&
+                /* Can add more conditions here */
+                true
+            );
+
+            return filterCondition;
+        }
+
+    </script>
+</body>
+
+</html>
