@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
-    <title>Leaflet + Leaflet.Draw Example</title>
+    <title>CS 448B Assignment 3</title>
 </head>
 <style>
     .controls {
@@ -24,11 +24,11 @@
     <div id="map" style="width: 50%; height: 500px;"></div>
     <div class="controls">
         <div class="control-section">
-            <div>Ratings (0 - 5)</div>
+            <div>Ratings (0.0 - 5.0)</div>
             <div id="rating"></div>
         </div>
         <div class="control-section">
-            <div>Reviews (0 - 500)</div>
+            <div>Reviews (0 - 2000)</div>
             <div id="reviews"></div>
         </div>
         <div class="control-section">
@@ -91,7 +91,7 @@
             .width(300)
             .tickFormat(d3.format(".1f"))
             .default([0, 5])
-            .fill("#2196f3")
+            .fill("#fc921f")
             .on("onchange", val => filterMarkers());
 
         d3.select("#rating")
@@ -110,7 +110,7 @@
             .width(300)
             .tickFormat(d3.format("d"))
             .default([1, 2000])
-            .fill("#2196f3")
+            .fill("#fc921f")
             .on("onchange", val => filterMarkers());
 
         d3.select("#reviews")
