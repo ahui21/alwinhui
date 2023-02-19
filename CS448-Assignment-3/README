@@ -1,0 +1,9 @@
+CS448B: Data Visualization
+Winter 2023
+Alwin Hui (alwin@stanford.edu)
+
+The code used here was developed based on various D3.js tutorials I found both online and in class materials. Afterwards, debugging was largely conducted through TAs during office hours and with minor assistance from non-Stanford friends with D3 experience. However, the code was written and completed independently.
+
+This was extremely challenging. This took about 30 hours total, not including debugging (which was another 10 hours). The hardest part was by far the adjustable circles, since this took significant debugging as it would not show certain locations that should be included in the radius or show incorrect numbers. In addition, allowing adjustable circles that could update in real time to show locations was very frustrating.
+
+However, one of my friends suggested using Leaflet, stating it had support for dragging locations of circles. I then spent a few hours learning Leaflet and its code before trying to implement it and it sped up the process significantly.
