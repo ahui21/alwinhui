@@ -22,13 +22,18 @@
 
 <body>
     <div id="map" style="width: 50%; height: 500px;"></div>
+    
+    <!-- panel for filters -->
+
     <div class="controls">
         <div class="control-section">
+            <!-- max rating in data set is 5.0 -->
             <div>Ratings (0.0 - 5.0)</div>
             <div id="rating"></div>
         </div>
         <div class="control-section">
-            <div>Reviews (0 - 2000)</div>
+            <!-- max number of reviews in data set is 2990 -->
+            <div>Reviews (0 - 3000)</div>
             <div id="reviews"></div>
         </div>
         <div class="control-section">
@@ -42,7 +47,6 @@
             </div>
         </div>
     </div>
-
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
@@ -82,7 +86,7 @@
         });
         map.addControl(drawControl);
 
-        /* D3 Elements */
+        /* D3 elements */
         let ratingSlider = d3
             .sliderBottom()
             .min(0)
@@ -109,7 +113,7 @@
             .step(10)
             .width(300)
             .tickFormat(d3.format("d"))
-            .default([1, 2000])
+            .default([1, 3000])
             .fill("#fc921f")
             .on("onchange", val => filterMarkers());
 
@@ -129,7 +133,8 @@
             filterMarkers();
         });
 
-        /* Prepare for data to be converted to geoJSON, initialize 2 layers */
+        /* prepare for data to be converted to geoJSON */
+        /* two layers will be initialized, with only one updated */
         let geojson = {};
         let geojsonLayerBase = L.geoJSON(null, { // this layer contains the original data, and will not be modified
             pointToLayer: addMarkers,
@@ -143,10 +148,11 @@
 
         /* read in data and convert to geoJSON to greatly speed up drawing performance */
         d3.csv("data.csv").then(function (data) {
-            // Iterate over each row in the CSV data
+            // iterate over each row in the CSV data
             const features = data.map(function (row) {
                 let coords = row.coordinates.split(",");
                 if (row.price === '0') {
+                    // assume missing prices are '$'
                     row.price = '$'
                 }
                 return {
@@ -167,7 +173,7 @@
                 };
             });
 
-            // with the data imported, initialize the geojson object and layers
+            // with the data imported, initialize the geoJSON object and layers
             geojson = {
                 type: 'FeatureCollection',
                 features: features
@@ -183,15 +189,12 @@
             });
 
             geojsonUpdateLayer.addTo(map);
-
-            // console.log(geojson);
-            // console.log("geojsonlayerInitial: ", geojsonLayerBase)
         });
 
-        /* Specify listener functions to handle when circles are added, edited, and removed */
+        /* specify listener functions to handle circles (adding, editing, removing) */
         map.on("draw:created", function(e) {
             let layer = e.layer;
-            drawnItems.addLayer(layer); // this line is necessary; otherwise, the circle will not be added to the map
+            drawnItems.addLayer(layer);
             filterMarkers();
         })
 
@@ -200,8 +203,7 @@
         });
 
 
-        /* Business Logic for intersection code */
-        // Note - currently handles N circles, this is unnecessary and can be simplified to handling 2 circles
+        /* code for intersection of circles */
         function filterMarkers() {
             let filteredMarkers = [];
             if (drawnItems.getLayers().length > 1) {
@@ -240,46 +242,44 @@
             })
             geojsonUpdateLayer.addData({
                 type: 'FeatureCollection',
-                features: filteredMarkers.map(layer => layer.feature) // hacky, grabs the geoJSON data from the staged data
+                features: filteredMarkers.map(layer => layer.feature) // temporary solution that grabs the geoJSON data from the staged data
             });
-            geojsonUpdateLayer.addTo(map); // finally, add the staged data to the map
+            geojsonUpdateLayer.addTo(map);
         }
 
-        // Helper function that indicates to the geojsonLayer that we should show markers for each location
+        // helper function to show markers for each location
         function addMarkers(feature, latlng) {
             let marker = L.marker([latlng.lng, latlng.lat]);
             return marker
         }
 
-        // Helper function to bind a popup to each marker based on the feature information
+        // helper function to bind popups to each marker based on the feature information
         function addLayers(feature, layer) {
-            // extract property info
+            // extract location info
             let { name, price, rating, review_count, categories, phone, address } = feature.properties;
 
-            // Bind a popup to the geoJSON layer with the property info
-            layer.bindPopup(`Name: ${name} <br>Price: ${price} <br>Rating: ${rating} stars<br>Reviews: ${review_count} <br>Tags: ${categories} <br>Phone #: ${phone} <br>Address: ${address}}`);
+            // bind popup to the geoJSON layer with the property info
+            layer.bindPopup(`Name: ${name} <br>Price: ${price} <br>Rating: ${rating} stars<br>Reviews: ${review_count} <br>Tags: ${categories} <br>Phone #: ${phone} <br>Address: ${address}`);
 
-            // Show the popup on hover
+            // show the popup on hover
             layer.on('mouseover', function (e) {
                 this.openPopup();
             });
 
-            // Hide the popup when the mouse leaves
+            // hide the popup when the mouse leaves
             layer.on("mouseout", function (e) {
                 this.closePopup();
             });
         }
 
-        // Helper function to filter the geoJSON layer based on the user's input
+        // helper function to filter the geoJSON layer based on the user's input in the control panel
         function filterLocation(feature) {
             let { name, price, rating, review_count, categories, phone, address } = feature.properties;
 
             let filterCondition = (
                 rating >= ratingSlider.value()[0] && rating <= ratingSlider.value()[1] &&
                 review_count >= reviewSlider.value()[0] && review_count <= reviewSlider.value()[1] &&
-                (selectedPriceValue === "Any" || price === selectedPriceValue) &&
-                /* Can add more conditions here */
-                true
+                (selectedPriceValue === "Any" || price === selectedPriceValue)
             );
 
             return filterCondition;

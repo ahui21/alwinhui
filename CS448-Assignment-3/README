@@ -2,8 +2,32 @@ CS448B: Data Visualization
 Winter 2023
 Alwin Hui (alwin@stanford.edu)
 
-The code used here was developed based on various D3.js tutorials I found both online and in class materials. Afterwards, debugging was largely conducted through TAs during office hours and with minor assistance from non-Stanford friends with D3 experience. However, the code was written and completed independently.
+The code used here was developed based on various D3.js tutorials I found both online and in class
+materials. Afterwards, debugging was largely conducted through TAs during office hours and with minor
+assistance from non-Stanford friends with D3 experience. However, the code was written and completed
+independently.
 
-This was extremely challenging. This took about 30 hours total, not including debugging (which was another 10 hours). The hardest part was by far the adjustable circles, since this took significant debugging as it would not show certain locations that should be included in the radius or show incorrect numbers. In addition, allowing adjustable circles that could update in real time to show locations was very frustrating.
+This was extremely challenging. This took about 30 hours total, not including debugging (which was
+another 10 hours). The hardest part was by far the adjustable circles, since this took significant
+debugging as it would not show certain locations that should be included in the radius or show
+incorrect numbers. In addition, allowing adjustable circles that could update in real time to show
+locations was very frustrating, since the circles would not update the locations on the map in real time.
 
-However, one of my friends suggested using Leaflet, stating it had support for dragging locations of circles. I then spent a few hours learning Leaflet and its code before trying to implement it and it sped up the process significantly.
+However, one of my friends suggested using Leaflet, stating it had support for dragging locations of
+circles. I then spent a few hours learning Leaflet and its code before trying to implement it and it
+sped up the process significantly since this had strong support for drawing adjustable circles. One tutorial I used was: https://leafletjs.com/examples/quick-start/.
+
+One shortcoming with this map was that the map is not incredibly user friendly. Specifically, by 
+plotting hundreds of locations on the map, it looks crowded and is fairly difficult to manage. 
+Certainly, adding the filters and adjustable circles makes it easier and can lower the amount of data 
+points displayed, but it is still not visually appealing for users.
+
+Another shortcoming is this map is not super scalable. For example, I originally used the Yelp 
+dataset, which had ~7000 data points, instead of the Google dataset, which had ~800 data points. The 
+Yelp dataset froze the application and the map was difficult to use since it would not update in real 
+time. I later switched to the Google dataset which was much more responsive.
+
+With more time, I would have liked to modify the visual style to make the markers smaller and more 
+transparent, especially since dense clusters are difficult to understand currently. I would have also 
+liked to try other methods of displaying locations that would be more scalable to higher amouns of 
+data points like the Yelp dataset.
