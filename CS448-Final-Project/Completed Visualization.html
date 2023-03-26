@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,30 +58,27 @@
 function getColor(magnitude) {
   switch (magnitude.toLowerCase()) {
     case "high":
-      return "#900C3F";
-    case "medium high":
-      return "#C70039";
+      return "red";
     case "medium":
-      return "#FF5733";
+      return "amber";
     case "medium low":
-      return "FFC300";
-    case "low":
-      return "#DAF7A6";
+      return "yellow";
+    case "medium high":
+      return "orange";
     case "do not know":
-      return "#999999";
     case "not expected to impact the jurisdiction within the next 5 years":
-      return "#000000";
-    case "no data":
-      return "#999999"
+      return "blue";
+    case "low":
+      return "green";
     default:
-      return "#000000";
+      return "blue";
   }
 }
 
 
 var circles;
     // Load the data from the CSV file
-    d3.csv("http://alwinhui.com/CS448-Final-Project/impact.csv").then(function(data) {
+    d3.csv("http://alwinhui.com/CS448-Final-Project/data.csv").then(function(data) {
       // Create the filter interface options
       var hazardOptions = [];
       var probabilityOptions = [];
@@ -273,13 +269,12 @@ updateData();
 
 // Add legend
 var legendData = [
-  { label: "High", color: "#900C3F" },
-  { label: "Medium High", color: "#C70039" },
-  { label: "Medium", color: "#FF5733" },
-  { label: "Medium Low", color: "#FFC300" },
-  { label: "Low", color: "#DAF7A6"}
-  { label: "Do not know / No data", color: "#999999" },
-  { label: "No Impact", color: "#000000"}
+  { label: "High", color: "red" },
+  { label: "Medium", color: "amber" },
+  { label: "Medium Low", color: "yellow" },
+  { label: "Medium High", color: "orange" },
+  { label: "Do not know / Not expected to impact", color: "blue" },
+  { label: "Low", color: "green" }
 ];
 
 var legend = svg.append("g")

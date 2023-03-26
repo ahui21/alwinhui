@@ -1,4 +1,4 @@
-City,Country,Climate-related hazards (ORIGINAL),Climate-related hazards,Current probability of hazard,Current magnitude of impact of hazard,Expected future change in hazard intensity,Expected future change in hazard frequency,Population,City Location,
+City,Country,Hazard,Climate-related hazards,Current probability of hazard,Current magnitude of impact of hazard,Expected future change in hazard intensity,Expected future change in hazard frequency,Population,City Location,
 Abidjan,Ivory Coast,Air pollution,Air pollution,Medium High,Medium High,None,None,6110642,"5.36, -4.0083 ",
 Abidjan,Ivory Coast,Biodiversity loss,Biodiversity loss,No Data,No Data,No Data,No Data,6110642,"5.36, -4.0083 ",
 Abidjan,Ivory Coast,Coastal flooding,Coastal flooding,High,High,Increasing,Increasing,6110642,"5.36, -4.0083 ",
