@@ -59,20 +59,23 @@
 function getColor(magnitude) {
   switch (magnitude.toLowerCase()) {
     case "high":
-      return "red";
-    case "medium":
-      return "amber";
-    case "medium low":
-      return "yellow";
+      return "#900C3F";
     case "medium high":
-      return "orange";
-    case "do not know":
-    case "not expected to impact the jurisdiction within the next 5 years":
-      return "blue";
+      return "#C70039";
+    case "medium":
+      return "#FF5733";
+    case "medium low":
+      return "FFC300";
     case "low":
-      return "green";
+      return "#DAF7A6";
+    case "do not know":
+      return "#999999";
+    case "not expected to impact the jurisdiction within the next 5 years":
+      return "#000000";
+    case "no data":
+      return "#999999"
     default:
-      return "blue";
+      return "#000000";
   }
 }
 
@@ -270,12 +273,13 @@ updateData();
 
 // Add legend
 var legendData = [
-  { label: "High", color: "red" },
-  { label: "Medium", color: "amber" },
-  { label: "Medium Low", color: "yellow" },
-  { label: "Medium High", color: "orange" },
-  { label: "Do not know / Not expected to impact", color: "blue" },
-  { label: "Low", color: "green" }
+  { label: "High", color: "#900C3F" },
+  { label: "Medium High", color: "#C70039" },
+  { label: "Medium", color: "#FF5733" },
+  { label: "Medium Low", color: "#FFC300" },
+  { label: "Low", color: "#DAF7A6"}
+  { label: "Do not know / No data", color: "#999999" },
+  { label: "No Impact", color: "#000000"}
 ];
 
 var legend = svg.append("g")
