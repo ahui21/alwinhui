@@ -117,11 +117,11 @@
           var magnitudeOptions = [];
 
           data.forEach(function(d) {
-            if (!hazardOptions.includes(d["Hazard"])) {
-              hazardOptions.push(d["Hazard"]);
+            if (!hazardOptions.includes(d["Hazard (by magnitude)"])) {
+              hazardOptions.push(d["Hazard (by magnitude)"]);
             }
-            if (!fullHazardOptions.includes(d["Climate-related hazards"])) {
-              fullHazardOptions.push(d["Climate-related hazards"]);
+            if (!fullHazardOptions.includes(d["Climate-related hazards (by magnitude)"])) {
+              fullHazardOptions.push(d["Climate-related hazards (by magnitude)"]);
             }
             if (!magnitudeOptions.includes(d["Current magnitude of impact of hazard"])) {
               magnitudeOptions.push(d["Current magnitude of impact of hazard"]);
@@ -135,7 +135,7 @@
             var magnitudeFilter = getCheckedValues("magnitude-filter-checkboxes");
 
             var filteredData = data.filter(function(d) {
-              return (hazardFilter.length === 0 || hazardFilter.includes(d["Hazard"])) &&
+              return (hazardFilter.length === 0 || hazardFilter.includes(d["Hazard (by magnitude)"])) &&
                 (magnitudeFilter.length === 0 || magnitudeFilter.includes(d["Current magnitude of impact of hazard"]));
             });
 
@@ -199,7 +199,7 @@
           }
 
           // call createCheckboxes() for each filter section
-          createCheckboxes("Hazard", "hazard-filter");
+          createCheckboxes("Hazard (by magnitude)", "hazard-filter");
           createCheckboxes("Current magnitude of impact of hazard", "magnitude-filter");
 
           d3.select("#hazard-select").on("change", updateData);
@@ -258,7 +258,7 @@
                 tooltip.html(""); // clear the tooltip content
                 tooltip.append("p").html("<strong>City:</strong> " + d.City);
                 tooltip.append("p").html("<strong>Country:</strong> " + d.Country);
-                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Climate-related hazards"]);
+                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Climate-related hazards (by magnitude)"]);
                 tooltip.append("p").html("<strong>Current Magnitude:</strong> " + d["Current magnitude of impact of hazard"]);
               })
               .on("mouseout", function(event, d) {
@@ -362,11 +362,11 @@
           var probabilityOptions = [];
 
           data.forEach(function(d) {
-            if (!hazardOptions2.includes(d["Hazard"])) {
-              hazardOptions2.push(d["Hazard"]);
+            if (!hazardOptions2.includes(d["Hazard (by probability)"])) {
+              hazardOptions2.push(d["Hazard (by probability)"]);
             }
-            if (!fullHazardOptions2.includes(d["Climate-related hazards"])) {
-              fullHazardOptions2.push(d["Climate-related hazards"]);
+            if (!fullHazardOptions2.includes(d["Climate-related hazards (by probability)"])) {
+              fullHazardOptions2.push(d["Climate-related hazards (by probability)"]);
             }
             if (!probabilityOptions.includes(d["Current probability of hazard"])) {
               probabilityOptions.push(d["Current probability of hazard"]);
@@ -380,7 +380,7 @@
             var probabilityFilter = getCheckedValues("probability-filter-checkboxes");
 
             var filteredData2 = data.filter(function(d) {
-              return (hazardFilter2.length === 0 || hazardFilter2.includes(d["Hazard"])) &&
+              return (hazardFilter2.length === 0 || hazardFilter2.includes(d["Hazard (by probability)"])) &&
                 (probabilityFilter.length === 0 || probabilityFilter.includes(d["Current probability of hazard"]));
             });
 
@@ -444,7 +444,7 @@
           }
 
           // call createCheckboxes() for each filter section
-          createCheckboxes("Hazard", "hazard-filter2");
+          createCheckboxes("Hazard (by probability)", "hazard-filter2");
           createCheckboxes("Current probability of hazard", "probability-filter");
 
           d3.select("#hazard2-select").on("change", updateData);
@@ -503,7 +503,7 @@
                 tooltip.html(""); // clear the tooltip content
                 tooltip.append("p").html("<strong>City:</strong> " + d.City);
                 tooltip.append("p").html("<strong>Country:</strong> " + d.Country);
-                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Climate-related hazards"]);
+                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Climate-related hazards (by probability)"]);
                 tooltip.append("p").html("<strong>Current Probability:</strong> " + d["Current probability of hazard"]);
               })
               .on("mouseout", function(event, d) {
