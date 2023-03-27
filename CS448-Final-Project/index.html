@@ -78,7 +78,7 @@
         </div>
       </div>
       <div id="text">
-        <p>Of the 100 cities in the C40 Cities Climate Leadership Group, 60 of them are currently facing a climate hazard with a magnitude level of "High", with another 17 and 5 facing ones of "Medium High" and "Medium", respectively. That means fewer than 20% of these cities are not already currently facing a climate hazard of concern.</p>
+        <p>Of the 100 cities in the C40 Cities Climate Leadership Group, 60 of them are currently facing a climate hazard with a magnitude level of "High", with another 17 and 5 facing ones of "Medium High" and "Medium", respectively. That means fewer than 20% of these cities are not already currently facing a climate hazard with significant magnitude.</p>
         <p>Geographically, we can see there is largely no correlation between geography and magnitude of their climate hazard, as cities around the world in different latitudes and longitudes all face "High" magnitude climate hazards. However, most of the cities facing "High" and "Medium High" magnitude climate hazards are located near coastlines, which makes sense given the impact of sea levels on many different climate hazards (flooding, hurricanes, water stress, etc.). However, given most major cities are located near coastlines, there is not a big enough sample size of non-coastline cities for a conclusive comparative analysis.</p>
         <p>Correlations do exist between geography and type of climate hazards as well, which we observe when we filter certain climate hazards. For example, we see heavy precipitation will be a more dangerous climate hazard primarily in Europe and the Americas, with it being a relatively less dangerous hazard in Asia. Similarly, river flooding will be a more dangerous climate hazard primarily in Europe and the East Coast of the Americas, with most of Africa and Asia being unaffected.</p>
       </div>
@@ -315,7 +315,7 @@
       <div id="first">
       <div id="map2"></div>
       <div id="filter2">
-        <div id="hazard-filter" class="filter-section">
+        <div id="hazard2-filter" class="filter-section">
           <p><strong>Hazard:</strong></p>
         </div>
         <div id="probability-filter" class="filter-section">
@@ -323,9 +323,9 @@
         </div>
       </div>
       <div id="text2">
-        <p>Of the 100 cities in the C40 Cities Climate Leadership Group, 60 of them are currently facing a climate hazard with a magnitude level of "High", with another 17 and 5 facing ones of "Medium High" and "Medium", respectively. That means fewer than 20% of these cities are not already currently facing a climate hazard of concern.</p>
-        <p>Geographically, we can see there is largely no correlation between geography and magnitude of their climate hazard, as cities around the world in different latitudes and longitudes all face "High" magnitude climate hazards. However, most of the cities facing "High" and "Medium High" magnitude climate hazards are located near coastlines, which makes sense given the impact of sea levels on many different climate hazards (flooding, hurricanes, water stress, etc.). However, given most major cities are located near coastlines, there is not a big enough sample size of non-coastline cities for a conclusive comparative analysis.</p>
-        <p>Correlations do exist between geography and type of climate hazards as well, which we observe when we filter certain climate hazards. For example, we see heavy precipitation will be a more dangerous climate hazard primarily in Europe and the Americas, with it being a relatively less dangerous hazard in Asia. Similarly, river flooding will be a more dangerous climate hazard primarily in Europe and the East Coast of the Americas, with most of Africa and Asia being unaffected.</p>
+        <p>We now turn our attention to the probability of these climate hazards. Of the 100 cities, 64 of them are currently facing a climate hazard with a probability level of "High", with another 12 and 3 facing ones of "Medium High" and "Medium", respectively. That means fewer than 25% of these cities are not already currently facing a climate hazard with a significant probability.</p>
+        <p>Geographically, we can see that most of the "Medium Low" and "Low" probability cities are located in Asia, with the vast majority of High cities located near the coastlines and Medium High cities located more inland. This makes intuitive sense given rising sea level changes will affect cities closer to the coastline first and inland cities later, thus producing a gradient of current probability.</p>
+        <p>We can see certain geographical areas are already seeing relatively higher probabilities of certain climate hazards. For example, drought is already at a "High" or "Medium High" probability for most of Europe, extreme heat is already at a "High", "Medium High", or "Medium" probability for many cities located near the Equator, and heavy precipitation is already at a "High" or "Medium High" probability for much of Europe and the Americas. On the other hand, climate hazards like urban flooding are affecting cities around the world.</p>
       </div>
 
       <div id="tooltip"></div>
@@ -357,16 +357,16 @@
         // Load the data from the CSV file
         d3.csv("http://alwinhui.com/CS448-Final-Project/probability.csv").then(function(data) {
           // Create the filter interface options
-          var hazardOptions = [];
-          var fullHazardOptions = []
+          var hazardOptions2 = [];
+          var fullHazardOptions2 = []
           var probabilityOptions = [];
 
           data.forEach(function(d) {
-            if (!hazardOptions.includes(d["Hazard"])) {
-              hazardOptions.push(d["Hazard"]);
+            if (!hazardOptions2.includes(d["Hazard"])) {
+              hazardOptions2.push(d["Hazard"]);
             }
-            if (!fullHazardOptions.includes(d["Climate-related hazards"])) {
-              fullHazardOptions.push(d["Climate-related hazards"]);
+            if (!fullHazardOptions2.includes(d["Climate-related hazards"])) {
+              fullHazardOptions2.push(d["Climate-related hazards"]);
             }
             if (!probabilityOptions.includes(d["Current probability of hazard"])) {
               probabilityOptions.push(d["Current probability of hazard"]);
@@ -376,16 +376,16 @@
       
           // Filter the data based on the filter interface selections
           function updateData() {
-            var hazardFilter = getCheckedValues("hazard-filter-checkboxes");
+            var hazardFilter2 = getCheckedValues("hazard-filter2-checkboxes");
             var probabilityFilter = getCheckedValues("probability-filter-checkboxes");
 
-            var filteredData = data.filter(function(d) {
-              return (hazardFilter.length === 0 || hazardFilter.includes(d["Hazard"])) &&
+            var filteredData2 = data.filter(function(d) {
+              return (hazardFilter2.length === 0 || hazardFilter2.includes(d["Hazard"])) &&
                 (probabilityFilter.length === 0 || probabilityFilter.includes(d["Current probability of hazard"]));
             });
 
             circles = svg.selectAll("circle")
-              .data(filteredData, function(d) { return d.id; });
+              .data(filteredData2, function(d) { return d.id; });
 
             circles.exit().remove();
 
@@ -444,10 +444,10 @@
           }
 
           // call createCheckboxes() for each filter section
-          createCheckboxes("Hazard", "hazard-filter");
+          createCheckboxes("Hazard", "hazard-filter2");
           createCheckboxes("Current probability of hazard", "probability-filter");
 
-          d3.select("#hazard-select").on("change", updateData);
+          d3.select("#hazard2-select").on("change", updateData);
           d3.select("#probability-select").on("change", updateData);
           // add event listener for all checkboxes
 
