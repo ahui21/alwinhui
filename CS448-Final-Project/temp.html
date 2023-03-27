@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Visualization of Global Climate Hazards by City</title>
+    <title>Visualization of Global Climate Hazards by City by Magnitude</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://d3js.org/d3-geo.v2.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
@@ -31,10 +31,6 @@
       .checkbox-label {
         display: block;
       }
-      #text {
-        padding: 10px;
-        width: 940px;
-      }
     </style>
   </head>
 
@@ -45,22 +41,21 @@
   </header>
 
   <body>
-    <div id="second">
-      <div id="first">
+    <div id="first">
       <div id="map"></div>
       <div id="filter">
-        <div id="hazard-filter2" class="filter-section">
+        <div id="hazard-filter" class="filter-section">
           <p><strong>Hazard:</strong></p>
         </div>
-        <div id="probability-filter" class="filter-section">
-          <p><strong>Current Probability:</strong></p>
+        <div id="magnitude-filter" class="filter-section">
+          <p><strong>Current Magnitude:</strong></p>
         </div>
       </div>
 
       <div id="tooltip"></div>
       <script>
-        function getColor(probability) {
-          switch (probability.toLowerCase()) {
+        function getColor(magnitude) {
+          switch (magnitude.toLowerCase()) {
             case "high":
               return "#900C3F";
             case "medium high":
@@ -84,33 +79,33 @@
 
         var circles;
         // Load the data from the CSV file
-        d3.csv("http://alwinhui.com/CS448-Final-Project/probability.csv").then(function(data) {
+        d3.csv("http://alwinhui.com/CS448-Final-Project/impact.csv").then(function(data) {
           // Create the filter interface options
-          var hazardOptions2 = [];
-          var fullHazardOptions2 = []
-          var probabilityOptions = [];
+          var hazardOptions = [];
+          var fullHazardOptions = []
+          var magnitudeOptions = [];
 
           data.forEach(function(d) {
-            if (!hazardOptions2.includes(d["Hazard"])) {
-              hazardOptions2.push(d["Hazard"]);
+            if (!hazardOptions.includes(d["Hazard (by magnitude)"])) {
+              hazardOptions.push(d["Hazard (by magnitude)"]);
             }
-            if (!fullHazardOptions2.includes(d["Climate-related hazards"])) {
-              fullHazardOptions2.push(d["Climate-related hazards"]);
+            if (!fullHazardOptions.includes(d["Climate-related hazards (by magnitude)"])) {
+              fullHazardOptions.push(d["Climate-related hazards (by magnitude)"]);
             }
-            if (!probabilityOptions.includes(d["Current probability of hazard"])) {
-              probabilityOptions.push(d["Current probability of hazard"]);
+            if (!magnitudeOptions.includes(d["Current magnitude of impact of hazard"])) {
+              magnitudeOptions.push(d["Current magnitude of impact of hazard"]);
             }
           });
       
       
           // Filter the data based on the filter interface selections
           function updateData() {
-            var hazardFilter2 = getCheckedValues("hazard2-filter-checkboxes");
-            var probabilityFilter = getCheckedValues("probability-filter-checkboxes");
+            var hazardFilter = getCheckedValues("hazard-filter-checkboxes");
+            var magnitudeFilter = getCheckedValues("magnitude-filter-checkboxes");
 
             var filteredData = data.filter(function(d) {
-              return (hazardFilter2.length === 0 || hazardFilter2.includes(d["Hazard"])) &&
-                (probabilityFilter.length === 0 || probabilityFilter.includes(d["Current probability of hazard"]));
+              return (hazardFilter.length === 0 || hazardFilter.includes(d["Hazard (by magnitude)"])) &&
+                (magnitudeFilter.length === 0 || magnitudeFilter.includes(d["Current magnitude of impact of hazard"]));
             });
 
             circles = svg.selectAll("circle")
@@ -130,13 +125,13 @@
               })
               .attr("r", 5)
               .attr("fill", function(d) {
-                return getColor(d["Current probability of hazard"]);
+                return getColor(d["Current magnitude of impact of hazard"]);
               })
               .attr("opacity", 0.7)
               .merge(circles)
               .attr("r", 5)
               .attr("fill", function(d) {
-                return getColor(d["Current probability of hazard"]);
+                return getColor(d["Current magnitude of impact of hazard"]);
               })
               .attr("opacity", 0.7);
           }
@@ -173,11 +168,11 @@
           }
 
           // call createCheckboxes() for each filter section
-          createCheckboxes("Hazard", "hazard2-filter");
-          createCheckboxes("Current probability of hazard", "probability-filter");
+          createCheckboxes("Hazard (by magnitude)", "hazard-filter");
+          createCheckboxes("Current magnitude of impact of hazard", "magnitude-filter");
 
-          d3.select("#hazard2-select").on("change", updateData);
-          d3.select("#probability-select").on("change", updateData);
+          d3.select("#hazard-select").on("change", updateData);
+          d3.select("#magnitude-select").on("change", updateData);
           // add event listener for all checkboxes
 
           // Create the map using D3.js
@@ -216,7 +211,7 @@
               })
               .attr("r", 5)
               .attr("fill", function(d) {
-                return getColor(d["Current probability of hazard"]);
+                return getColor(d["Current magnitude of impact of hazard"]);
               })
               .attr("opacity", 0.7)
               .on("mouseover", function(event, d) {
@@ -232,8 +227,8 @@
                 tooltip.html(""); // clear the tooltip content
                 tooltip.append("p").html("<strong>City:</strong> " + d.City);
                 tooltip.append("p").html("<strong>Country:</strong> " + d.Country);
-                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Climate-related hazards"]);
-                tooltip.append("p").html("<strong>Current Probability:</strong> " + d["Current probability of hazard"]);
+                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Climate-related hazards (by magnitude)"]);
+                tooltip.append("p").html("<strong>Current Magnitude:</strong> " + d["Current magnitude of impact of hazard"]);
               })
               .on("mouseout", function(event, d) {
                 d3.select(this)
