@@ -55,30 +55,29 @@
 
   <div id="tooltip"></div>
   <script>
-function getColor(magnitude) {
-  switch (magnitude.toLowerCase()) {
-    case "high":
-      return "red";
-    case "medium":
-      return "amber";
-    case "medium low":
-      return "yellow";
-    case "medium high":
-      return "orange";
-    case "do not know":
-    case "not expected to impact the jurisdiction within the next 5 years":
-      return "blue";
-    case "low":
-      return "green";
-    default:
-      return "blue";
-  }
-}
+function getColor(intensity) {
+          switch (intensity.toLowerCase()) {
+            case "increasing":
+              return "#DE425B";
+            case "none":
+              return "#F1F1F1";
+            case "decreasing":
+              return "#488F31";
+            case "do not know":
+              return "#000000";
+            case "not expected to happen in the future":
+              return "#F1F1F1";
+            case "no data":
+              return "#000000"
+            default:
+              return "#000000";
+          }
+        }
 
 
 var circles;
     // Load the data from the CSV file
-    d3.csv("https://raw.githubusercontent.com/HamnaBukhari/csvfile/main/data.csv").then(function(data) {
+    d3.csv("http://alwinhui.com/CS448-Final-Project/alldata.csv").then(function(data) {
       // Create the filter interface options
       var hazardOptions = [];
       var probabilityOptions = [];

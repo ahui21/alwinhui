@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Visualization of Global Climate Hazards by City (All Data)</title>
+    <title>Visualization of Global Climate Hazards by City by Magnitude</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://d3js.org/d3-geo.v2.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
@@ -41,24 +41,25 @@
   </header>
 
   <body>
-    <div id="third">
+    <div id="first">
       <div id="map"></div>
-      <div id="hazard-filter" class="filter-section">
-        <p>Hazard:</p>
+      <div id="filter">
+        <div id="hazard-filter" class="filter-section">
+          <p><strong>Hazard:</strong></p>
+        </div>
+        <div id="probability-filter" class="filter-section">
+          <p><strong>Current Probability:</strong></p>
+        </div>
+        <div id="magnitude-filter" class="filter-section">
+          <p><strong>Current Magnitude:</strong></p>
+        </div>
+        <div id="intensity-filter" class="filter-section">
+          <p><strong>Expected Change in Intensity:</strong></p>
+        </div>
+        <div id="frequency-filter" class="filter-section">
+          <p><strong>Expected Change in Frequency:</strong></p>
+        </div>
       </div>
-      <div id="probability-filter" class="filter-section">
-        <p>Current Probability:</p>
-      </div>
-      <div id="magnitude-filter" class="filter-section">
-        <p>Current Magnitude:</p>
-      </div>
-      <div id="intensity-filter" class="filter-section">
-        <p>Expected Future Change in Intensity:</p>
-      </div>
-      <div id="frequency-filter" class="filter-section">
-        <p>Expected Future Change in Frequency:</p>
-      </div>
-    </div>
 
       <div id="tooltip"></div>
       <script>
@@ -70,12 +71,6 @@
               return "#F1F1F1";
             case "decreasing":
               return "#488F31";
-            case "do not know":
-              return "#000000";
-            case "not expected to happen in the future":
-              return "#F1F1F1";
-            case "no data":
-              return "#000000"
             default:
               return "#000000";
           }
@@ -83,7 +78,7 @@
 
         var circles;
         // Load the data from the CSV file
-        d3.csv("https://raw.githubusercontent.com/HamnaBukhari/csvfile/main/data.csv").then(function(data) {
+        d3.csv("http://alwinhui.com/CS448-Final-Project/alldata.csv").then(function(data) {
           // Create the filter interface options
           var hazardOptions = [];
           var probabilityOptions = [];
@@ -192,7 +187,6 @@
           createCheckboxes("Expected future change in hazard intensity", "intensity-filter");
           createCheckboxes("Expected future change in hazard frequency", "frequency-filter");
           d3.select("#frequency-select").on("change", updateData);
-          d3.selectAll("#")
           // add event listener for all checkboxes
 
           // Create the map using D3.js
