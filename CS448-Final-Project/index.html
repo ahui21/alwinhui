@@ -58,5 +58,13 @@
         <p>What is particularly alarming is for almost every city that currently face a "High" or "Medium High" magnitude, they are all expecting an increase in intensity, with only "Medium Low" and "Low" magnitude hazards largely even in terms of expected increase or decrease. This means many cities that are already facing particularly devastating climate hazards right now are expecting these hazards to get worse in the future, rather than better.</p>
       </div>
     </div>
+
+    <div id="data">
+      <div id="text">
+        <p>All of the data and sources come from the CDP Open Data Portal, which collects survey data from thousands of cities, states, and regional governments on climate hazards. There have been some climate risk maps that have been built, but these have mostly been on a macro level or are done so using proprietary data (such as First Street Foundation’s climate maps). However, there hasn’t been one that’s been built out on a city level, such as the data provided by CDP (https://data.cdp.net/).</p>
+        <p>This data has been <a href="https://data.cdp.net/Climate-Hazards/2022-Cities-Climate-Hazards-by-Magnitude-of-Impact/s8kx-ja49">visualized previously</a> but not as extensively and geographically focused. When we first download the data, we find it is fairly messy, as each city provides its data in different ways and methods. This initial data set includes 26 columns with 3866 rows. Thus, a great deal of data cleaning had to be done, including formatting errors, removing incomplete or irrelevant data, and adding in external data on missing C40 cities. We focused on C40 cities only since C40 cities are the most relevant (they are roughly the 100 largest cities in the world) and are the most accurate (are most timely and complete with their data surveys). We also merged this with other data from other sources to form as complete a dataset as possible. This created a final dataset of roughly 10 columns and 2500 rows (100 cities across 23 types of hazards and 2 worst case scenario analyses).</p>
+        <p>I then conducted various ways of analyzing the information, including using Excel (e.g. VLOOKUP, filtering, etc.), Python (data cleaning and formatting), Tableau (initial visualizations for data analytics), and finally D3.js (data visualization).</p>
+      </div>
+    </div>
   </body>
 </html>
