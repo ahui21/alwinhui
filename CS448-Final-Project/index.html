@@ -37,6 +37,26 @@
         padding: 10px;
         width: 940px;
       }
+      #filter2 {
+        position: absolute;
+        top: 1000px;
+        right: 20px;
+        background-color: white;
+        padding: 10px;
+        padding-top: 0px;
+        border: 1px solid #ccc;
+        width: 250px;
+      }
+      #map2 {
+        position: absolute;
+        top: 1000px;
+      }
+      #text2 {
+        position: absolute;
+        top: 1500px;
+        padding: 10px;
+        width: 940px;
+      }
     </style>
   </head>
 
@@ -59,7 +79,7 @@
       </div>
       <div id="text">
         <p>Of the 100 cities in the C40 Cities Climate Leadership Group, 60 of them are currently facing a climate hazard with a magnitude level of "High", with another 17 and 5 facing ones of "Medium High" and "Medium", respectively. That means fewer than 20% of these cities are not already currently facing a climate hazard of concern.</p>
-        <p>Geographically, we can see there is largely no correlation between geography and magnitude of their climate hazard, as cities around the world in different latitudes and longitudes all face "High" magnitude climate hazards. However, most of the cities facing "High" and "Medium High" magnitude climate hazards are located near coastlines, which makes sense given the impact of sea levels on many different climate hazards (flooding, hurricanes, water stress, etc.). However, given most major cities are located near coastlines, there is not a big enough sample size of non-coastline cities for a conclusive comparative analysis.
+        <p>Geographically, we can see there is largely no correlation between geography and magnitude of their climate hazard, as cities around the world in different latitudes and longitudes all face "High" magnitude climate hazards. However, most of the cities facing "High" and "Medium High" magnitude climate hazards are located near coastlines, which makes sense given the impact of sea levels on many different climate hazards (flooding, hurricanes, water stress, etc.). However, given most major cities are located near coastlines, there is not a big enough sample size of non-coastline cities for a conclusive comparative analysis.</p>
         <p>Correlations do exist between geography and type of climate hazards as well, which we observe when we filter certain climate hazards. For example, we see heavy precipitation will be a more dangerous climate hazard primarily in Europe and the Americas, with it being a relatively less dangerous hazard in Asia. Similarly, river flooding will be a more dangerous climate hazard primarily in Europe and the East Coast of the Americas, with most of Africa and Asia being unaffected.</p>
       </div>
 
@@ -93,11 +113,18 @@
         d3.csv("http://alwinhui.com/CS448-Final-Project/impact.csv").then(function(data) {
           // Create the filter interface options
           var hazardOptions = [];
-          var magnitudeOptions = ["High", "Medium High", "Medium", "Medium Low", "Low", "Do Not Know", "No Data", "No Expected Impact"];
+          var fullHazardOptions = []
+          var magnitudeOptions = [];
 
           data.forEach(function(d) {
             if (!hazardOptions.includes(d["Hazard"])) {
               hazardOptions.push(d["Hazard"]);
+            }
+            if (!fullHazardOptions.includes(d["Climate-related hazards"])) {
+              fullHazardOptions.push(d["Climate-related hazards"]);
+            }
+            if (!magnitudeOptions.includes(d["Current magnitude of impact of hazard"])) {
+              magnitudeOptions.push(d["Current magnitude of impact of hazard"]);
             }
           });
       
@@ -231,7 +258,7 @@
                 tooltip.html(""); // clear the tooltip content
                 tooltip.append("p").html("<strong>City:</strong> " + d.City);
                 tooltip.append("p").html("<strong>Country:</strong> " + d.Country);
-                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Hazard"]);
+                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Climate-related hazards"]);
                 tooltip.append("p").html("<strong>Current Magnitude:</strong> " + d["Current magnitude of impact of hazard"]);
               })
               .on("mouseout", function(event, d) {
@@ -285,21 +312,23 @@
     </div>
 
     <div id="second">
+      <div id="first">
       <div id="map2"></div>
       <div id="filter2">
-        <div id="hazard-filter2" class="filter-section">
+        <div id="hazard-filter" class="filter-section">
           <p><strong>Hazard:</strong></p>
         </div>
         <div id="probability-filter" class="filter-section">
           <p><strong>Current Probability:</strong></p>
         </div>
       </div>
-      <div id="text">
-        <p>Of the 100 cities in the C40 Cities Climate Leadership Group, 60 of them are currently facing a climate hazard with a magnitude level of "High", with another 17 and 5 facing ones of "Medium High" and "Medium", respectively. That means fewer than 20% of these cities are not already facing a climate hazard of concern.</p>
-        <p>Geographically, we can see there is largely no correlation between geography and magnitude of their climate hazard, as cities around the world in different latitudes and longitudes all face "High" magnitude climate hazards. However, the correlations do exist between geography and type of climate hazards, which we observe when we filter certain climate hazards. For example, we see heavy precipitation will be a more dangerous climate hazard primarily in Europe and the Americas, with it being a relatively less dangerous hazard in Asia. Similarly, river flooding will be a more dangerous climate hazard primarily in Europe and the East Coast of the Americas, with most of Africa and Asia being unaffected.</p>
+      <div id="text2">
+        <p>Of the 100 cities in the C40 Cities Climate Leadership Group, 60 of them are currently facing a climate hazard with a magnitude level of "High", with another 17 and 5 facing ones of "Medium High" and "Medium", respectively. That means fewer than 20% of these cities are not already currently facing a climate hazard of concern.</p>
+        <p>Geographically, we can see there is largely no correlation between geography and magnitude of their climate hazard, as cities around the world in different latitudes and longitudes all face "High" magnitude climate hazards. However, most of the cities facing "High" and "Medium High" magnitude climate hazards are located near coastlines, which makes sense given the impact of sea levels on many different climate hazards (flooding, hurricanes, water stress, etc.). However, given most major cities are located near coastlines, there is not a big enough sample size of non-coastline cities for a conclusive comparative analysis.</p>
+        <p>Correlations do exist between geography and type of climate hazards as well, which we observe when we filter certain climate hazards. For example, we see heavy precipitation will be a more dangerous climate hazard primarily in Europe and the Americas, with it being a relatively less dangerous hazard in Asia. Similarly, river flooding will be a more dangerous climate hazard primarily in Europe and the East Coast of the Americas, with most of Africa and Asia being unaffected.</p>
       </div>
 
-      <div id="tooltip2"></div>
+      <div id="tooltip"></div>
       <script>
         function getColor(probability) {
           switch (probability.toLowerCase()) {
@@ -324,36 +353,43 @@
           }
         }
 
-        var circles2;
+        var circles;
         // Load the data from the CSV file
         d3.csv("http://alwinhui.com/CS448-Final-Project/probability.csv").then(function(data) {
           // Create the filter interface options
-          var hazardOptions2 = [];
-          var probabilityOptions2 = ["High", "Medium High", "Medium", "Medium Low", "Low", "Do Not Know", "No Data", "No Expected Impact"];
+          var hazardOptions = [];
+          var fullHazardOptions = []
+          var probabilityOptions = [];
 
           data.forEach(function(d) {
-            if (!hazardOptions2.includes(d["Hazard"])) {
-              hazardOptions2.push(d["Hazard"]);
+            if (!hazardOptions.includes(d["Hazard"])) {
+              hazardOptions.push(d["Hazard"]);
+            }
+            if (!fullHazardOptions.includes(d["Climate-related hazards"])) {
+              fullHazardOptions.push(d["Climate-related hazards"]);
+            }
+            if (!probabilityOptions.includes(d["Current probability of hazard"])) {
+              probabilityOptions.push(d["Current probability of hazard"]);
             }
           });
       
       
           // Filter the data based on the filter interface selections
           function updateData() {
-            var hazardFilter2 = getCheckedValues("hazard-filter-checkboxes2");
-            var probabilityFilter2 = getCheckedValues("probability-filter-checkboxes2");
+            var hazardFilter = getCheckedValues("hazard-filter-checkboxes");
+            var probabilityFilter = getCheckedValues("probability-filter-checkboxes");
 
-            var filteredData2 = data.filter(function(d) {
-              return (hazardFilter2.length === 0 || hazardFilter2.includes(d["Hazard"])) &&
-                (probabilityFilter2.length === 0 || probabilityFilter2.includes(d["Current probability of impact of hazard"]));
+            var filteredData = data.filter(function(d) {
+              return (hazardFilter.length === 0 || hazardFilter.includes(d["Hazard"])) &&
+                (probabilityFilter.length === 0 || probabilityFilter.includes(d["Current probability of hazard"]));
             });
 
-            circles2 = svg.selectAll("circle")
-              .data(filteredData2, function(d) { return d.id; });
+            circles = svg.selectAll("circle")
+              .data(filteredData, function(d) { return d.id; });
 
-            circles2.exit().remove();
+            circles.exit().remove();
 
-            circles2.enter()
+            circles.enter()
               .append("circle")
               .attr("cx", function(d) {
                 var location = d["City Location"].split(",");
@@ -365,31 +401,31 @@
               })
               .attr("r", 5)
               .attr("fill", function(d) {
-                return getColor(d["Current probability of impact of hazard"]);
+                return getColor(d["Current probability of hazard"]);
               })
               .attr("opacity", 0.7)
-              .merge(circles2)
+              .merge(circles)
               .attr("r", 5)
               .attr("fill", function(d) {
-                return getColor(d["Current probability of impact of hazard"]);
+                return getColor(d["Current probability of hazard"]);
               })
               .attr("opacity", 0.7);
           }
 
           function getCheckedValues(className) {
-            var checkboxes2 = document.getElementsByClassName(className);
-            var checkedValues2 = [];
-            for (var i = 0; i < checkboxes2.length; i++) {
-              if (checkboxes2[i].checked) {
-                checkedValues2.push(checkboxes2[i].value);
+            var checkboxes = document.getElementsByClassName(className);
+            var checkedValues = [];
+            for (var i = 0; i < checkboxes.length; i++) {
+              if (checkboxes[i].checked) {
+                checkedValues.push(checkboxes[i].value);
               }
             }
-            return checkedValues2;
+            return checkedValues;
           }
 
           function createCheckboxes(column, filterId) {
-            var uniqueValues2 = Array.from(new Set(data.map((d) => d[column])));
-            var filterDiv2 = d3.select("#" + filterId);
+            var uniqueValues = Array.from(new Set(data.map((d) => d[column])));
+            var filterDiv = d3.select("#" + filterId);
 
             filterDiv.selectAll("label")
               .data(uniqueValues)
@@ -398,7 +434,7 @@
               .attr("class", "checkbox-label")
               .text(function (d) { return d; })
               .insert("input")
-              .attr("class", filterId + "-checkboxes2")
+              .attr("class", filterId + "-checkboxes")
               .attr("type", "checkbox")
               .attr("value", function (d) { return d; })
               .property("checked", false)
@@ -409,10 +445,10 @@
 
           // call createCheckboxes() for each filter section
           createCheckboxes("Hazard", "hazard-filter");
-          createCheckboxes("Current probability of impact of hazard", "probability-filter");
+          createCheckboxes("Current probability of hazard", "probability-filter");
 
-          d3.select("#hazard-select2").on("change", updateData);
-          d3.select("#probability-select2").on("change", updateData);
+          d3.select("#hazard-select").on("change", updateData);
+          d3.select("#probability-select").on("change", updateData);
           // add event listener for all checkboxes
 
           // Create the map using D3.js
@@ -451,7 +487,7 @@
               })
               .attr("r", 5)
               .attr("fill", function(d) {
-                return getColor(d["Current probability of impact of hazard"]);
+                return getColor(d["Current probability of hazard"]);
               })
               .attr("opacity", 0.7)
               .on("mouseover", function(event, d) {
@@ -467,8 +503,8 @@
                 tooltip.html(""); // clear the tooltip content
                 tooltip.append("p").html("<strong>City:</strong> " + d.City);
                 tooltip.append("p").html("<strong>Country:</strong> " + d.Country);
-                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Hazard"]);
-                tooltip.append("p").html("<strong>Current Probability:</strong> " + d["Current probability of impact of hazard"]);
+                tooltip.append("p").html("<strong>Hazard:</strong> " + d["Climate-related hazards"]);
+                tooltip.append("p").html("<strong>Current Probability:</strong> " + d["Current probability of hazard"]);
               })
               .on("mouseout", function(event, d) {
                 d3.select(this)
@@ -480,7 +516,7 @@
               });
 
             // Add legend
-            var legendData2 = [
+            var legendData = [
               { label: "High", color: "#900C3F" },
               { label: "Medium High", color: "#C70039" },
               { label: "Medium", color: "#FF5733" },
@@ -490,12 +526,12 @@
               { label: "No Impact", color: "#000000"}
             ];
 
-            var legend2 = svg.append("g")
+            var legend = svg.append("g")
               .attr("class", "legend")
               .attr("transform", "translate(20," + (height - 170) + ")");
 
-            legend2.selectAll("rect")
-              .data(legendData2)
+            legend.selectAll("rect")
+              .data(legendData)
               .enter()
               .append("rect")
               .attr("width", 20)
@@ -505,7 +541,7 @@
               .attr("fill", function(d) { return d.color; });
 
             legend.selectAll("text")
-              .data(legendData2)
+              .data(legendData)
               .enter()
               .append("text")
               .attr("x", 25)
