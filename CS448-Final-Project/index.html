@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -57,8 +58,9 @@
         </div>
       </div>
       <div id="text">
-        <p>Of the 100 cities in the C40 Cities Climate Leadership Group, 60 of them are currently facing a climate hazard with a magnitude level of "High", with another 17 and 5 facing ones of "Medium High" and "Medium", respectively. That means fewer than 20% of these cities are not already facing a climate hazard of concern.</p>
-        <p>Geographically, we can see there is largely no correlation between geography and magnitude of their climate hazard, as cities around the world in different latitudes and longitudes all face "High" magnitude climate hazards. However, the correlations do exist between geography and type of climate hazards, which we observe when we filter certain climate hazards. For example, we see heavy precipitation will be a more dangerous climate hazard primarily in Europe and the Americas, with it being a relatively less dangerous hazard in Asia. Similarly, river flooding will be a more dangerous climate hazard primarily in Europe and the East Coast of the Americas, with most of Africa and Asia being unaffected.</p>
+        <p>Of the 100 cities in the C40 Cities Climate Leadership Group, 60 of them are currently facing a climate hazard with a magnitude level of "High", with another 17 and 5 facing ones of "Medium High" and "Medium", respectively. That means fewer than 20% of these cities are not already currently facing a climate hazard of concern.</p>
+        <p>Geographically, we can see there is largely no correlation between geography and magnitude of their climate hazard, as cities around the world in different latitudes and longitudes all face "High" magnitude climate hazards. However, most of the cities facing "High" and "Medium High" magnitude climate hazards are located near coastlines, which makes sense given the impact of sea levels on many different climate hazards (flooding, hurricanes, water stress, etc.). However, given most major cities are located near coastlines, there is not a big enough sample size of non-coastline cities for a conclusive comparative analysis.
+        <p>Correlations do exist between geography and type of climate hazards as well, which we observe when we filter certain climate hazards. For example, we see heavy precipitation will be a more dangerous climate hazard primarily in Europe and the Americas, with it being a relatively less dangerous hazard in Asia. Similarly, river flooding will be a more dangerous climate hazard primarily in Europe and the East Coast of the Americas, with most of Africa and Asia being unaffected.</p>
       </div>
 
       <div id="tooltip"></div>
@@ -276,7 +278,7 @@
 
             // Call the updateData function whenever a filter is changed
             d3.selectAll("input[type=checkbox]").on("change", updateData);
-          	
+            
           });
         });
       </script>
@@ -322,36 +324,36 @@
           }
         }
 
-        var circles;
+        var circles2;
         // Load the data from the CSV file
         d3.csv("http://alwinhui.com/CS448-Final-Project/probability.csv").then(function(data) {
           // Create the filter interface options
-          var hazardOptions = [];
-          var probabilityOptions = ["High", "Medium High", "Medium", "Medium Low", "Low", "Do Not Know", "No Data", "No Expected Impact"];
+          var hazardOptions2 = [];
+          var probabilityOptions2 = ["High", "Medium High", "Medium", "Medium Low", "Low", "Do Not Know", "No Data", "No Expected Impact"];
 
           data.forEach(function(d) {
-            if (!hazardOptions.includes(d["Hazard"])) {
-              hazardOptions.push(d["Hazard"]);
+            if (!hazardOptions2.includes(d["Hazard"])) {
+              hazardOptions2.push(d["Hazard"]);
             }
           });
       
       
           // Filter the data based on the filter interface selections
           function updateData() {
-            var hazardFilter = getCheckedValues("hazard-filter-checkboxes");
-            var probabilityFilter = getCheckedValues("probability-filter-checkboxes");
+            var hazardFilter2 = getCheckedValues("hazard-filter-checkboxes2");
+            var probabilityFilter2 = getCheckedValues("probability-filter-checkboxes2");
 
-            var filteredData = data.filter(function(d) {
-              return (hazardFilter.length === 0 || hazardFilter.includes(d["Hazard"])) &&
-                (probabilityFilter.length === 0 || probabilityFilter.includes(d["Current probability of impact of hazard"]));
+            var filteredData2 = data.filter(function(d) {
+              return (hazardFilter2.length === 0 || hazardFilter2.includes(d["Hazard"])) &&
+                (probabilityFilter2.length === 0 || probabilityFilter2.includes(d["Current probability of impact of hazard"]));
             });
 
-            circles = svg.selectAll("circle")
-              .data(filteredData, function(d) { return d.id; });
+            circles2 = svg.selectAll("circle")
+              .data(filteredData2, function(d) { return d.id; });
 
-            circles.exit().remove();
+            circles2.exit().remove();
 
-            circles.enter()
+            circles2.enter()
               .append("circle")
               .attr("cx", function(d) {
                 var location = d["City Location"].split(",");
@@ -366,7 +368,7 @@
                 return getColor(d["Current probability of impact of hazard"]);
               })
               .attr("opacity", 0.7)
-              .merge(circles)
+              .merge(circles2)
               .attr("r", 5)
               .attr("fill", function(d) {
                 return getColor(d["Current probability of impact of hazard"]);
@@ -375,19 +377,19 @@
           }
 
           function getCheckedValues(className) {
-            var checkboxes = document.getElementsByClassName(className);
-            var checkedValues = [];
-            for (var i = 0; i < checkboxes.length; i++) {
-              if (checkboxes[i].checked) {
-                checkedValues.push(checkboxes[i].value);
+            var checkboxes2 = document.getElementsByClassName(className);
+            var checkedValues2 = [];
+            for (var i = 0; i < checkboxes2.length; i++) {
+              if (checkboxes2[i].checked) {
+                checkedValues2.push(checkboxes2[i].value);
               }
             }
-            return checkedValues;
+            return checkedValues2;
           }
 
           function createCheckboxes(column, filterId) {
-            var uniqueValues = Array.from(new Set(data.map((d) => d[column])));
-            var filterDiv = d3.select("#" + filterId);
+            var uniqueValues2 = Array.from(new Set(data.map((d) => d[column])));
+            var filterDiv2 = d3.select("#" + filterId);
 
             filterDiv.selectAll("label")
               .data(uniqueValues)
@@ -396,7 +398,7 @@
               .attr("class", "checkbox-label")
               .text(function (d) { return d; })
               .insert("input")
-              .attr("class", filterId + "-checkboxes")
+              .attr("class", filterId + "-checkboxes2")
               .attr("type", "checkbox")
               .attr("value", function (d) { return d; })
               .property("checked", false)
@@ -409,15 +411,15 @@
           createCheckboxes("Hazard", "hazard-filter");
           createCheckboxes("Current probability of impact of hazard", "probability-filter");
 
-          d3.select("#hazard-select").on("change", updateData);
-          d3.select("#probability-select").on("change", updateData);
+          d3.select("#hazard-select2").on("change", updateData);
+          d3.select("#probability-select2").on("change", updateData);
           // add event listener for all checkboxes
 
           // Create the map using D3.js
           var width = 960;
           var height = 500;
 
-          var svg = d3.select("#map")
+          var svg = d3.select("#map2")
             .append("svg")
             .attr("width", width)
             .attr("height", height);
@@ -478,7 +480,7 @@
               });
 
             // Add legend
-            var legendData = [
+            var legendData2 = [
               { label: "High", color: "#900C3F" },
               { label: "Medium High", color: "#C70039" },
               { label: "Medium", color: "#FF5733" },
@@ -488,12 +490,12 @@
               { label: "No Impact", color: "#000000"}
             ];
 
-            var legend = svg.append("g")
+            var legend2 = svg.append("g")
               .attr("class", "legend")
               .attr("transform", "translate(20," + (height - 170) + ")");
 
-            legend.selectAll("rect")
-              .data(legendData)
+            legend2.selectAll("rect")
+              .data(legendData2)
               .enter()
               .append("rect")
               .attr("width", 20)
@@ -503,7 +505,7 @@
               .attr("fill", function(d) { return d.color; });
 
             legend.selectAll("text")
-              .data(legendData)
+              .data(legendData2)
               .enter()
               .append("text")
               .attr("x", 25)
@@ -518,4 +520,4 @@
       </script>
     </div>
   </body>
-</html>   
+</html>
