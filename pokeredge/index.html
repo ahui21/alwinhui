@@ -7,7 +7,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/pokeredge/assets/index-D7M3N61r.js"></script>
+    <script>
+      // SPA-on-GitHub-Pages decoder: pairs with the repo-root /404.html
+      // redirect. When 404.html sends us to /pokeredge/?/sessions, restore
+      // the URL to /pokeredge/sessions before React Router boots.
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function (s) {
+            return s.replace(/~and~/g, '&');
+          }).join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/pokeredge/assets/index-k1Jdkc47.js"></script>
     <link rel="stylesheet" crossorigin href="/pokeredge/assets/index-D75Qs_gs.css">
   </head>
   <body>
